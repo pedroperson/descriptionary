@@ -4,8 +4,9 @@ A daily game like wordle, single player.
 
 ## Point system
 
-- +1 good guess
+- +10 good guess
 - -1 bad guess
+- -2 repeated guess
 
 # Backend
 
@@ -17,7 +18,10 @@ A daily game like wordle, single player.
 
 # Frontend
 
-- Keep a localStorage of user data
-- Keep score of attempts
-- Cache attempts so user doesn't forget? Maybe reduce points as a punishment?
-- Max amount of tries ?
+[ ] Max amount of tries ?
+
+[x] Keep a localStorage of user data
+
+[x] Keep score of attempts
+
+[x] Cache attempts so user doesn't forget? Maybe reduce points as a punishment?
