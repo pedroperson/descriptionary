@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { submitGuess, correctGuesses, reset } from '../static/game';
+	import { onMount } from 'svelte';
+	import {
+		submitGuess,
+		correctGuesses,
+		reset,
+		todaysSentence,
+		type CorrectGuess
+	} from '../static/game';
 	import { SCORE } from '../static/points';
 
 	// Current state of the user query
@@ -16,18 +23,43 @@
 				// Reset the query so the textbox is emptied and user can try again
 				query = '';
 			});
+
+	let promise: Promise<string> = new Promise(() => {});
+
+	const separator = '{ }';
+	const separator2 = '______';
+
+	onMount(() => {
+		promise = todaysSentence()
+			.then((rawSentence) => rawSentence.replaceAll(separator, separator2))
+			.catch((err) => '');
+	});
+
+	const fillInTheBlanks = (sentence: string, guesses: CorrectGuess[]): string => {
+        console.log("fill",sentence,guesses)
+		return sentence.split(separator2).reduce((acc, phrase, i) => {
+            console.log("reduce!",acc, phrase, i)
+			if (i == 0) return phrase;
+			const relatedGuess: CorrectGuess | undefined = guesses.find((g) => g.index === i - 1);
+            console.log('relatedGuess',relatedGuess,i);
+			if (!relatedGuess) return acc + separator2 + phrase;
+			return acc + relatedGuess.guess + phrase;
+		}, '');
+	};
 </script>
 
 <div class="score">
 	{$SCORE}
 </div>
 
-<div class="words-of-the-day">
-	{#each $correctGuesses as g, i (i)}
-		<div class="word" class:filled={g}>
-			{g}
-		</div>
-	{/each}
+<div class="sentence">
+	{#await promise}
+		loading sentence....
+	{:then sentence}
+		{fillInTheBlanks(sentence, $correctGuesses)}
+	{:catch err}
+		fuck there was error: {JSON.stringify(err)}
+	{/await}
 </div>
 
 <form on:submit|preventDefault={submit}>
@@ -43,7 +75,7 @@
 	<div class="state" bind:this={stateElem} />
 
 	<button class="submit" type="button" on:click={submit}>Submit</button>
-    <button class="submit" type="button" on:click={reset}>Reset</button>
+	<button class="submit" type="button" on:click={reset}>Reset</button>
 </form>
 
 <style>

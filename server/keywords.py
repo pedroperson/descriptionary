@@ -18,8 +18,8 @@ print("Todays list:", todays_list)
 
 
 def testGuess(guess: str,
-              word_list: list):
-    if guess in word_list:
-        print("good guess")
-        return True
-    return False
+              word_list: list) -> int:
+    try:
+        return word_list.index(guess)
+    except ValueError:
+        return -1

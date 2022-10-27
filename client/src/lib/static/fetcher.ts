@@ -1,29 +1,35 @@
 export async function post(url: string, data = {}) {
-	return fetch(url, params(data))
-		.then((res) => {
-			if (!res.ok) {
-				throw responseError(res);
-			}
-			return res.json();
-		})
-		.then((json) => {
-			if (json.error) {
-				throw json.error;
-			}
-			return json;
-		});
+	return fetch(url, params(data)).then((res) => {
+		if (!res.ok) {
+			throw responseError(res);
+		}
+		return res.text();
+	});
+}
+export async function GET(url: string) {
+	return fetch(url, { method: 'GET' }).then((res) => {
+		if (!res.ok) {
+			throw responseError(res);
+		}
+		return res.text();
+	});
 }
 
 export const responseError = (res: Response) => new Error(httpError(res.status) || res.statusText);
 
 const params = (body = {}): RequestInit => ({
 	method: 'POST',
+	headers: {},
+	body: JSON.stringify(body)
+});
+
+const paramsGET = (): RequestInit => ({
+	method: 'GET',
 	credentials: 'same-origin',
 	headers: {
 		'Content-Type': 'application/json',
 		Accept: 'application/json'
-	},
-	body: JSON.stringify(body)
+	}
 });
 
 const httpError = (code: number) =>
