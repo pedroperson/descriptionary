@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { post } from '../static/fetcher';
-	import previousAttempts from '../static/attempts';
-
-	// Number of words the user has to guess
-	const wordCount = 4;
+	import { submitGuess, correctGuesses, reset } from '../static/game';
+	import { SCORE } from '../static/points';
 
 	// Current state of the user query
 	let query = '';
@@ -12,51 +9,21 @@
 	let stateElem: Element;
 	const tellUser = (msg: string) => (stateElem.innerHTML = msg);
 
-	// Keep track of the correct guesses to keep track of progress and show them in the UI
-	const correctGuesses: string[] = [];
-
-	const gameIsOver = () => correctGuesses.length === wordCount;
-
-	const submit = () => {
-		console.log('submit!');
-		const q = query;
-		validate(q)
-			.then(() => post('/guess', { guess: q }))
-			.then(({ correct }) => {
-				correct ? handleCorrectGuess(q) : handleWrongGuess(q);
-			})
-			.catch((err) => tellUser(err.message))
-			.finally(() => {
+	const submit = () =>
+		submitGuess(query)
+			.then(tellUser)
+			.then(() => {
 				// Reset the query so the textbox is emptied and user can try again
 				query = '';
 			});
-	};
-
-	const validate = async (prompt: string) => {
-		// Don't let user try the same prompt more than once to save redundant server calls
-		if (previousAttempts.hasAttempted(prompt)) {
-			throw new Error(`You've already guessed "${query}"`);
-		}
-
-		previousAttempts.newAttempt(prompt);
-	};
-
-	const handleCorrectGuess = (guess: string) => {
-		tellUser('Correct guess!');
-
-		correctGuesses.push(guess);
-		if (gameIsOver()) {
-			window.alert('You won the game!!');
-		}
-	};
-
-	const handleWrongGuess = (guess: string) => {
-		tellUser(`"${guess}" was a bad guess`);
-	};
 </script>
 
+<div class="score">
+	{$SCORE}
+</div>
+
 <div class="words-of-the-day">
-	{#each correctGuesses as g, i (i)}
+	{#each $correctGuesses as g, i (i)}
 		<div class="word" class:filled={g}>
 			{g}
 		</div>
@@ -65,11 +32,18 @@
 
 <form on:submit|preventDefault={submit}>
 	<label for="promp-textbox">Write your guess, one word, five letters long</label>
-	<input id="promp-textbox" type="text" placeholder="Denim..." bind:value={query} />
+	<input
+		id="promp-textbox"
+		type="text"
+		placeholder="Denim..."
+		bind:value={query}
+		autocomplete="off"
+	/>
 
 	<div class="state" bind:this={stateElem} />
 
 	<button class="submit" type="button" on:click={submit}>Submit</button>
+    <button class="submit" type="button" on:click={reset}>Reset</button>
 </form>
 
 <style>
