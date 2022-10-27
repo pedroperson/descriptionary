@@ -20,5 +20,4 @@ A daily game like wordle, single player.
 - Keep a localStorage of user data
 - Keep score of attempts
 - Cache attempts so user doesn't forget? Maybe reduce points as a punishment?
-
 - Max amount of tries ?
