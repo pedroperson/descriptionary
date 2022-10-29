@@ -1,7 +1,8 @@
 
 from typing import Dict,  Any, Callable
+from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler
-from dataclasses import dataclass, field
+
 
 class Writer:
     def __init__(self, requestHandler: BaseHTTPRequestHandler):

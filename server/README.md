@@ -1,5 +1,16 @@
+# Server
+
+to get in here and start setting it up:
+
+`cd server`
+
+# Testing
+
 `pip install -U pytest`
-`pip install deep-compare`
+
+To run tests:
+
+`pytest`
 
 # For the Diffusers
 
