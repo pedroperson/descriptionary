@@ -1,10 +1,9 @@
 <script>
-
 	import Prompt from '$lib/components/Prompt.svelte';
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Home - Descriptionary</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 

@@ -1,3 +1,8 @@
+`pip install -U pytest`
+`pip install deep-compare`
+
+# For the Diffusers
+
 First run
 
 `!pip install --upgrade diffusers transformers scipy`
