@@ -1,10 +1,18 @@
 # Server
 
+# Run it
+
+To run it from main:
+
+`python3 server/server.py`
+
+# Testing
+
 to get in here and start setting it up:
 
 `cd server`
 
-# Testing
+Install the testing library:
 
 `pip install -U pytest`
 

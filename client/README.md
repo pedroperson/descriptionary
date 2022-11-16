@@ -1,3 +1,25 @@
+# Install stuff
+
+I think all you'll need to get started it to first run
+
+`npm install`
+
+to get all dependencies installed.
+
+# Run it
+
+If you use npm in other projects, first set the version to the current minimum.
+
+`nvm use 16.18.0`
+
+Then move into to the client folder and run the dev server.
+
+`cd client`
+
+`npm run dev`
+
+The following documentation comes from svelte while creating a project.
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
