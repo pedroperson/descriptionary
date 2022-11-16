@@ -1,0 +1,15 @@
+.DS_Store
+node_modules
+/__pycache__
+/server/__pycache__
+/server/__pycache__/
+./server/__pycache__
+.pytest_cache/
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+.vercel
+.output
