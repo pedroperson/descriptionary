@@ -11,18 +11,16 @@
 
 	// Current state of the user query
 	let query = '';
+	const resetQuery = ()=>(query="")
 
-	// Keep a reference to the state element so we can talk to the user through it
+	// Keep a reference to the state element so we can broadcast state to the user through it
 	let stateElem: Element;
 	const tellUser = (msg: string) => (stateElem.innerHTML = msg);
 
 	const submit = () =>
 		submitGuess(query)
 			.then(tellUser)
-			.then(() => {
-				// Reset the query so the textbox is emptied and user can try again
-				query = '';
-			});
+			.then(resetQuery);
 
 	let promise: Promise<string> = new Promise(() => {});
 
@@ -38,11 +36,11 @@
 	const fillInTheBlanks = (sentence: string, guesses: CorrectGuess[]): string => {
         console.log("fill",sentence,guesses)
 		return sentence.split(separator2).reduce((acc, phrase, i) => {
-            console.log("reduce!",acc, phrase, i)
 			if (i == 0) return phrase;
-			const relatedGuess: CorrectGuess | undefined = guesses.find((g) => g.index === i - 1);
-            console.log('relatedGuess',relatedGuess,i);
-			if (!relatedGuess) return acc + separator2 + phrase;
+
+			const relatedGuess = guesses.find((g) => g.index === i - 1);
+
+			if (relatedGuess === undefined) return acc + separator2 + phrase;
 			return acc + relatedGuess.guess + phrase;
 		}, '');
 	};
