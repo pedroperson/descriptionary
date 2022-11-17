@@ -96,21 +96,4 @@
 		margin-top: 2em;
 	}
 
-	.words-of-the-day {
-		display: flex;
-		gap: 20px;
-		margin-bottom: 10px;
-	}
-	.word {
-		padding: 0.5em 1em;
-		background-color: gray;
-		border-radius: 5px;
-		font-size: 20px;
-		color: black;
-	}
-
-	.word.filled {
-		background-color: green;
-		color: white;
-	}
 </style>
