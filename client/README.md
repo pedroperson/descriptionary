@@ -8,7 +8,7 @@ to get all dependencies installed.
 
 # Run it
 
-If you use npm in other projects, first set the version to the current minimum.
+If you use npm for other projects in your computer, first set the version to the current minimum.
 
 `nvm use 16.18.0`
 
