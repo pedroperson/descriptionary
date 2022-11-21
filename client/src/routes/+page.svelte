@@ -6,18 +6,19 @@
 
 	const numImagesInSet = 18;
 	const delayBetweenImages = 500;
-	let counter = 0 ;
-
-	const srcs = Array(numImagesInSet).fill('').map((_,i)=>`/images/ Porcupine  sandwich ${i}.jpg`);
-	console.log("srcs",srcs);
 	
+	// Keep track of the current step of the timer
+	let counter = 0 ;
 
 	let imageElem : HTMLImageElement;
 	let images : HTMLImageElement[];
+
+	const srcs = Array(numImagesInSet).fill('')
+		.map((_, i) => `/images/ Porcupine  sandwich ${i}.jpg`);
+
 	
 	if (typeof window !== "undefined"){
-		loadImages(srcs)
-		.then((imgs) => {
+		loadImages(srcs).then((imgs) => {
 			images = imgs;
 			console.log("LETS STRAT");
 			clock.start();

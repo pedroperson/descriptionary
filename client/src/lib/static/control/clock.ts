@@ -27,6 +27,7 @@ export function Clock(
 				counter += 1;
 				everyStep();
 			}, stepDuration);
-		}
+		},
+		stop
 	};
 }
