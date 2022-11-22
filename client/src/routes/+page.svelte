@@ -3,6 +3,8 @@
 
 	import {Clock} from '$lib/static/control/clock';
 	import {loadImages} from '$lib/static/control/imageLoader';
+	import { post } from '$lib/static/fetcher';
+
 
 	const numImagesInSet = 18;
 	const delayBetweenImages = 500;
@@ -13,8 +15,33 @@
 	let imageElem : HTMLImageElement;
 	let images : HTMLImageElement[];
 
-	const srcs = Array(numImagesInSet).fill('')
-		.map((_, i) => `/images/ Porcupine  sandwich ${i}.jpg`);
+	let correctGuesses : string[] = [];
+
+	let srcs = [];
+
+	requestImagesFromServer(correctGuesses);
+
+	async function requestImagesFromServer(guesses: string[]) {
+		const srcs = await post(
+			'http://localhost:8080/images', 
+			{ correct_guesses: correctGuesses }
+		).then((res)=>{
+			console.log(res);
+			return res;
+		}).catch((err)=>{
+			console.log("asdfasd",err)
+		});
+
+		console.log("I GOT THE IMAGES",srcs);
+	}
+
+
+
+
+
+
+	// const srcs = Array(numImagesInSet).fill('')
+	// 	.map((_, i) => `/images/ Porcupine  sandwich ${i}.jpg`);
 
 	
 	if (typeof window !== "undefined"){
