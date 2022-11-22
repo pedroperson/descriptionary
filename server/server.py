@@ -16,9 +16,11 @@ def todays_sentence(data, writer: Writer):
     writer.send_result(todays_sentence)
 
 
+WORDS = ["plant", "pot", "glass", "wood"]
+
+
 def todays_images(data: IncomingData, writer: Writer):
     print("Incoming data", data)
-    words = ["plant", "pot", "glass", "wood"]
 
     guesses = data['correct_guesses']
 
@@ -26,9 +28,9 @@ def todays_images(data: IncomingData, writer: Writer):
         guesses[i] = int(guesses[i])
 
     new_words = []
-    for i in range(len(words)):
+    for i in range(len(WORDS)):
         if i not in guesses:
-            new_words.append(words[i])
+            new_words.append(WORDS[i])
 
     print("new_words", new_words)
 
@@ -46,8 +48,7 @@ def todays_images(data: IncomingData, writer: Writer):
 
 def check_guess(data: IncomingData, writer: Writer):
     guess = data['guess']
-    FAKELIST = ["sky", "god", "fire"]
-    guess_index = testGuess(guess, FAKELIST)
+    guess_index = testGuess(guess, WORDS)
     writer.send_result(guess_index)
 
 

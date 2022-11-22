@@ -10,6 +10,7 @@ export function Clock(
 	let counter = 0;
 
 	const stop = () => {
+		counter = 0;
 		if (ticker !== null) clearInterval(ticker);
 	};
 
