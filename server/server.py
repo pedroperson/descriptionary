@@ -32,11 +32,12 @@ def todays_images(data: IncomingData, writer: Writer):
 
     print("new_words", new_words)
 
-    query = ' '.join(new_words)
+    query = '+'.join(new_words)
     urls = []
     image_count = 18
     for i in range(image_count):
-        urls.append(f"/images/ {query} {i}.jpg")
+        urls.append(
+            f"https://bitbu-public.s3.us-west-1.amazonaws.com/homepage/DELETE_aiproj/{query}+{i}.jpg")
 
     print("urls", urls)
 

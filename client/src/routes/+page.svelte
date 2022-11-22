@@ -3,7 +3,7 @@
 
 	import {Clock} from '$lib/static/control/clock';
 	import {loadImages} from '$lib/static/control/imageLoader';
-	import { post } from '$lib/static/fetcher';
+	import { post,postToJSON } from '$lib/static/fetcher';
 
 
 	const numImagesInSet = 18;
@@ -17,19 +17,20 @@
 
 	let correctGuesses : string[] = [];
 
-	let srcs = [];
+	let srcs :string[]= [];
 
 	requestImagesFromServer(correctGuesses);
 
 	async function requestImagesFromServer(guesses: string[]) {
-		const srcs = await post(
+		
+		srcs = await postToJSON(
 			'http://localhost:8080/images', 
 			{ correct_guesses: correctGuesses }
 		).then((res)=>{
-			console.log(res);
+			console.log("IMAGE RESULT: ",res, typeof res);
 			return res;
 		}).catch((err)=>{
-			console.log("asdfasd",err)
+			console.log("IMAGE ERROR:",err.message)
 		});
 
 		console.log("I GOT THE IMAGES",srcs);
@@ -91,7 +92,6 @@
 	<img bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
 	<div>{messageToUser}</div>
 
-	<Prompt />
 </section>
 
 <style>
