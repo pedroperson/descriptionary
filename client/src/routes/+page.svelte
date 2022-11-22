@@ -6,8 +6,8 @@
 	import { post,postToJSON } from '$lib/static/fetcher';
 
 
-	const numImagesInSet = 18;
-	const delayBetweenImages = 100;
+	const numImagesInSet = 24;
+	const delayBetweenImages = 800;
 	
 	// Keep track of the current step of the timer
 	let counter = 0 ;
@@ -46,8 +46,10 @@
 	}
 
 	const youWon = ()=> {
-clock.stop();
-yell("HOLY MOLY JULIE! THEY WON! THEY WON THE GAMEE!!");}
+	    counter = 0 ;
+		clock.stop();
+		yell("HOLY MOLY JULIE! THEY WON! THEY WON THE GAMEE!!");
+	}
 	
 	if (typeof window !== "undefined"){
 		loadImages(srcs).then((imgs) => {
