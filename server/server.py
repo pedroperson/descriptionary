@@ -20,8 +20,6 @@ WORDS = ["plant", "pot", "glass", "wood"]
 
 
 def todays_images(data: IncomingData, writer: Writer):
-    print("Incoming data", data)
-
     guesses = data['correct_guesses']
 
     for i in range(len(guesses)):
@@ -32,7 +30,9 @@ def todays_images(data: IncomingData, writer: Writer):
         if i not in guesses:
             new_words.append(WORDS[i])
 
-    print("new_words", new_words)
+    if len(new_words) is 0:
+        writer.send_result([])
+        return
 
     query = '+'.join(new_words)
     urls = []
@@ -40,8 +40,6 @@ def todays_images(data: IncomingData, writer: Writer):
     for i in range(image_count):
         urls.append(
             f"https://bitbu-public.s3.us-west-1.amazonaws.com/homepage/DELETE_aiproj/{query}+{i}.jpg")
-
-    print("urls", urls)
 
     writer.send_result(urls)
 

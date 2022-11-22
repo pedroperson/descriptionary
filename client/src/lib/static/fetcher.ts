@@ -15,6 +15,7 @@ export async function postToJSON(url: string, data = {}) {
 		return res.json();
 	});
 }
+
 export async function GET(url: string) {
 	return fetch(url, { method: 'GET' }).then((res) => {
 		if (!res.ok) {

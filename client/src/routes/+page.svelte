@@ -25,21 +25,29 @@
 		 postToJSON(
 			'http://localhost:8080/images', 
 			{ correct_guesses: correctGuesses }
-		).then((res)=>{
-			console.log("IMAGE RESULT: ",res, typeof res);
-			return res;
-		}).then((srcs)=>{
-			loadImages(srcs).then((imgs) => {
+		).then((srcs)=>{
+			console.log("I GOT THESE SRCS",srcs);
+			if (!srcs || srcs.length ===0) {
+				youWon()
+				throw '';
+			}
+			
+			return srcs;
+		}).then(loadImages).then((imgs) => {
 			images = imgs;
-			console.log("LOADED IMAGES",imgs);
 			clock.start();
-			return srcs
-		})
 		}).catch((err)=>{
+			if (err==="") return;
 			console.log("IMAGE ERROR:",err.message)
+
+			
 		});
 
 	}
+
+	const youWon = ()=> {
+clock.stop();
+yell("HOLY MOLY JULIE! THEY WON! THEY WON THE GAMEE!!");}
 	
 	if (typeof window !== "undefined"){
 		loadImages(srcs).then((imgs) => {
@@ -88,6 +96,7 @@
 			correctGuesses.push(index);
 			correctGuesses = correctGuesses;
 			requestImagesFromServer(correctGuesses);
+			textboxValue='';
 		})
 		.catch((err) => console.log("ERROR",err));
 	}
