@@ -29,6 +29,12 @@
 		).then((res)=>{
 			console.log("IMAGE RESULT: ",res, typeof res);
 			return res;
+		}).then((srcs)=>{
+			loadImages(srcs).then((imgs) => {
+			images = imgs;
+			console.log("LETS STRAT");
+			clock.start();
+		})
 		}).catch((err)=>{
 			console.log("IMAGE ERROR:",err.message)
 		});
