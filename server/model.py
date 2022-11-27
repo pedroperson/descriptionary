@@ -2,6 +2,7 @@
 from typing import Dict,  Any, Callable
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler
+import json
 
 
 class Writer:
@@ -18,7 +19,7 @@ class Writer:
     # Currently only accepts numbers and strings
     def send_result(self, result: Any):
         self._set_response(200)
-        self.h.wfile.write(bytes(str(result), "utf-8"))
+        self.h.wfile.write(bytes(json.dumps(result), "utf-8"))
 
     def send_success(self):
         self._set_response(200)

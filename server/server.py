@@ -16,37 +16,37 @@ def todays_sentence(data, writer: Writer):
     writer.send_result(todays_sentence)
 
 
-def todays_images(data: IncomingData, writer: Writer):
-    print("Incoming data", data)
-    words = ["plant", "pot", "glass", "wood"]
+WORDS = ["plant", "pot", "glass", "wood"]
 
+
+def todays_images(data: IncomingData, writer: Writer):
     guesses = data['correct_guesses']
 
     for i in range(len(guesses)):
         guesses[i] = int(guesses[i])
 
     new_words = []
-    for i in range(len(words)):
+    for i in range(len(WORDS)):
         if i not in guesses:
-            new_words.append(words[i])
+            new_words.append(WORDS[i])
 
-    print("new_words", new_words)
+    if len(new_words) is 0:
+        writer.send_result([])
+        return
 
-    query = ' '.join(new_words)
+    query = '+'.join(new_words)
     urls = []
-    image_count = 18
+    image_count = 25
     for i in range(image_count):
-        urls.append(f"/images/ {query} {i}.jpg")
-
-    print("urls", urls)
+        urls.append(
+            f"https://bitbu-public.s3.us-west-1.amazonaws.com/homepage/DELETE_aiproj/{query}+{i}.jpg")
 
     writer.send_result(urls)
 
 
 def check_guess(data: IncomingData, writer: Writer):
     guess = data['guess']
-    FAKELIST = ["sky", "god", "fire"]
-    guess_index = testGuess(guess, FAKELIST)
+    guess_index = testGuess(guess, WORDS)
     writer.send_result(guess_index)
 
 

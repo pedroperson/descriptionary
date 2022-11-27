@@ -6,6 +6,16 @@ export async function post(url: string, data = {}) {
 		return res.text();
 	});
 }
+
+export async function postToJSON(url: string, data = {}) {
+	return fetch(url, params(data)).then((res) => {
+		if (!res.ok) {
+			throw responseError(res);
+		}
+		return res.json();
+	});
+}
+
 export async function GET(url: string) {
 	return fetch(url, { method: 'GET' }).then((res) => {
 		if (!res.ok) {
