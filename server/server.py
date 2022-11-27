@@ -52,7 +52,8 @@ def todays_images(data: IncomingData, writer: Writer):
 def check_guess(data: IncomingData, writer: Writer):
     guess = data['guess']
     guess_index = testGuess(guess, WORDS)
-    writer.send_result(guess_index)
+    writer.send_result({'guess_index': guess_index,
+                        'guess': guess})
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 
 	import {Clock} from '$lib/static/control/clock';
 	import {loadImages} from '$lib/static/control/imageLoader';
-	import { post,postToJSON } from '$lib/static/fetcher';
+	import { postToJSON } from '$lib/static/fetcher';
 
 
 	const numImagesInSet = 24;
@@ -15,16 +15,19 @@
 	let imageElem : HTMLImageElement;
 	let images : HTMLImageElement[];
 
-	let correctGuesses : number[] = [];
+	let prompt : number[] = [];
+
+	let correctGuessIndexes : number[] = [];
+	let correctGuesses : string[] = [];
 
 	let srcs :string[]= [];
 
-	requestImagesFromServer(correctGuesses);
+	requestImagesFromServer(correctGuessIndexes);
 
 	async function requestImagesFromServer(guesses: number[]) {
 		 postToJSON(
 			'http://localhost:8080/images', 
-			{ correct_guesses: correctGuesses }
+			{ correct_guesses: correctGuessIndexes }
 		).then((srcs)=>{
 			console.log("I GOT THESE SRCS",srcs);
 			if (!srcs || srcs.length ===0) {
@@ -65,7 +68,7 @@
 	const yell = (message:string) => messageToUser = message;
 
 	const everyStep = ()=> {
-		yell(`show image ${counter}`);
+		// yell(`show image ${counter}`);
 		if (counter >= images.length) return;
 
 		imageElem.src= images[counter].src;
@@ -87,17 +90,24 @@
 
 	let textboxValue = '';
 
+
 	async function submitGuess(){
-		return  post('http://localhost:8080/guess', { guess: textboxValue })
-		.then((res: string) => {
+		return  postToJSON('http://localhost:8080/guess', { guess: textboxValue })
+		.then((res: any) => {
 			console.log("GUES RESULT: ",res);
-			const index = parseInt(res, 10);
-			
+			const index = parseInt(res.guess_index, 10);
+
+			console.log("index: ",res.guess_index,res.guess);
 			if (index === -1) return;
 
-			correctGuesses.push(index);
+			correctGuesses.push(res.guess);
 			correctGuesses = correctGuesses;
-			requestImagesFromServer(correctGuesses);
+
+			// prompt[index] = guess;
+
+			correctGuessIndexes.push(index);
+			correctGuessIndexes = correctGuessIndexes;
+			requestImagesFromServer(correctGuessIndexes);
 			textboxValue='';
 		})
 		.catch((err) => console.log("ERROR",err));
@@ -125,7 +135,13 @@
 	<form on:submit|preventDefault={submitGuess}>
 
 	<div>
-		CORRECT GUESSES : {JSON.stringify(correctGuesses)}
+		CORRECT GUESSES :
+
+		{#each correctGuesses as guess}
+			<span>
+				{guess}
+			</span>
+		{/each}
 	</div>
 		<input type="text" bind:value={textboxValue} use:autoFocus>
 
