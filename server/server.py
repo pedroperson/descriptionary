@@ -6,6 +6,7 @@ from router import Router
 def initRouter():
     r = Router()
     r.GET("/sentence", todays_sentence)
+    r.GET("/word_count", todays_word_count)
     r.POST("/images", todays_images)
     r.POST("/guess", check_guess)
     r.start(8080)
@@ -17,6 +18,10 @@ def todays_sentence(data, writer: Writer):
 
 
 WORDS = ["plant", "pot", "glass", "wood"]
+
+def todays_word_count(data, writer: Writer):
+    writer.send_result({"count":len(WORDS)})
+
 
 
 def todays_images(data: IncomingData, writer: Writer):
