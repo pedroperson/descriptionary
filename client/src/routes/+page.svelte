@@ -148,10 +148,10 @@
 
 <section>
 
-	<container class="submitcontainer">
+	<div class="submitdiv">
 		<input class="textbox" type="text" bind:value={textboxValue} use:autoFocus>
 		<button class="submitbtn" type="submit" on:click={submitGuess}> SUBMIT!!</button>
-	</container>
+	</div>
 
 	<container class="responsecontainer">
 	<img class = "imagedisplay" bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
@@ -178,16 +178,16 @@
 </section>
 
 <style>
-	
+
 	section {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		flex: 0.6;
-		gap: 10px;
+		gap: 20px;
 	}
 
-	.submitcontainer {
+	.submitdiv {
 		display: flex;
 		gap: 10px;
 	}
@@ -207,7 +207,6 @@
 	}
 
 	.submitbtn {
-		width: 201px;
 		height: 78px;
 		border-radius: 19px;
 		background: #468B00;
@@ -225,14 +224,14 @@
 	}
 
 	.imagedisplay {
-		width: 419px;
+		width: 50%;
 		height: 419px;
 		left: 207px;
 		top: 282px;
 	}
 
 	.correctguesses {
-		width: 253px;
+		width: 50%;
 		height: 427px;
 		left: 677px;
 		top: 271px;

@@ -9,7 +9,7 @@
 <style>
 
 	header {
-		width: 1280px;
+		width: 100%;
 		height: 50px;
 
 		font-family: 'Helvetica';
