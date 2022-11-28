@@ -134,28 +134,7 @@
 				requestImagesFromServer(correctGuessIndexes);
 				textboxValue='';
 		})
-		.catch((err) => console.log("ERROR",err));
-
-
-		return  postToJSON('http://localhost:8080/guess', { guess: textboxValue })
-		.then((res: any) => {
-			console.log("GUES RESULT: ",res);
-			const index = parseInt(res.guess_index, 10);
-
-			console.log("index: ",res.guess_index,res.guess);
-			if (index === -1) return;
-
-			correctGuesses.push(res.guess);
-			correctGuesses = correctGuesses;
-
-			prompt[index] = res.guess;
-
-			correctGuessIndexes.push(index);
-			correctGuessIndexes = correctGuessIndexes;
-			requestImagesFromServer(correctGuessIndexes);
-			textboxValue='';
-		})
-		.catch((err) => console.log("ERROR",err));
+		.catch((err) => console.log("SUBMIT ERROR",err));
 	}
 
 
