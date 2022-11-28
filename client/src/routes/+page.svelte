@@ -30,7 +30,8 @@
 			// Loop the counter background
 			counter = 0;
 		};
-
+		console.log("COUNTER",counter);
+		console.log("images.length",images.length);
 		imageElem.src= images[counter].src;
 		counter +=1;
 	}
@@ -102,7 +103,7 @@
 	}
 
 	// handleCorrectGuess stores the correct guess data so we can display it to the user
-	function handleCorrectGuess(index:number,guess:string){
+	function handleCorrectGuess(index:number, guess:string){
 		correctGuesses.push(guess);
 		correctGuesses = correctGuesses;
 
