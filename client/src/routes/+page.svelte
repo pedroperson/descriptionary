@@ -4,7 +4,7 @@
 	import {Clock} from '$lib/static/control/clock';
 	import {loadImages} from '$lib/static/control/imageLoader';
 	import { postToJSON, getToJSON } from '$lib/static/fetcher';
-	import { submitGuess, type GuessResponse } from '$lib/static/api/api';
+	import api from '$lib/static/api/api';
 	
 
 
@@ -28,47 +28,32 @@
 	requestImagesFromServer(correctGuessIndexes);
 
 	async function requestImagesFromServer(guesses: number[]) {
-		 postToJSON(
-			'http://localhost:8080/images', 
-			{ correct_guesses: correctGuessIndexes }
-		).then((srcs)=>{
-			// console.log("I GOT THESE SRCS",srcs);
-			if (!srcs || srcs.length ===0) {
+		api.requestImages(correctGuessIndexes).then((imgs)=>{
+			if (!imgs || imgs.length ===0) {
 				youWon()
 				throw '';
 			}
-			
-			return srcs;
-		}).then(loadImages).then((imgs) => {
+
 			images = imgs;
 			clock.start();
 		}).catch((err)=>{
 			if (err==="") return;
 			console.log("IMAGE ERROR:",err.message)
-
-			
 		});
 
 	}
 
 	async function requestWordCount() {
-		getToJSON(
-			'http://localhost:8080/word_count'
-		).then((res)=>{
-			console.log(res)
-			for (let index = 0; index < res.count; index++) {
-				prompt.push("")			
-			}
-	console.log("prompt0,",prompt);
-		}).catch((err)=>{
-			console.log("count ERROR:",err.message)
-
-		});
-
-	
-			
-
-
+		api.requestWordCount()
+			.then((count)=>{
+				console.log("count", count);
+				for (let index = 0; index < count; index++) {
+					prompt.push("");
+				}
+				console.log("prompt0,",prompt);
+			}).catch((err)=>{
+				console.log("count ERROR:",err.message);
+			});
 	}
 
 	const youWon = ()=> {
@@ -85,7 +70,6 @@
 		})
 	}
 	
-
 	let messageToUser = '';
 
 	const yell = (message:string) => messageToUser = message;
@@ -115,7 +99,7 @@
 
 
 	async function submitForm(){
-		return submitGuess(textboxValue)
+		return api.submitGuess(textboxValue)
 			.then((res) => {
 				const isIncorrectGuess = res.guess_index === -1;
 
