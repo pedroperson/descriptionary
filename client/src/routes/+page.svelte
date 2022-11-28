@@ -1,89 +1,42 @@
 <script lang="ts">
-	import Prompt from '$lib/components/Prompt.svelte';
-
 	import {Clock} from '$lib/static/control/clock';
-	import {loadImages} from '$lib/static/control/imageLoader';
-	import { postToJSON, getToJSON } from '$lib/static/fetcher';
 	import api from '$lib/static/api/api';
 	
-
-
 	const numImagesInSet = 24;
 	const delayBetweenImages = 800;
 	
-	// Keep track of the current step of the timer
+	// Keep track of the current step of the timer 
+	// TODO: This is bad right? just use th timer's own count
 	let counter = 0 ;
+
+	let textboxValue = '';
 
 	let imageElem : HTMLImageElement;
 	let images : HTMLImageElement[];
 
 	let prompt : string[] = [];
-	requestWordCount();
 
 	let correctGuessIndexes : number[] = [];
 	let correctGuesses : string[] = [];
 
-	let srcs :string[]= [];
-
+	// Load the images ASAP so we can show them to the user
 	requestImagesFromServer(correctGuessIndexes);
+	// Request the word count ASAP so we can show the correct number of "blank spaces" 
+	requestWordCount();
 
-	async function requestImagesFromServer(guesses: number[]) {
-		api.requestImages(correctGuessIndexes).then((imgs)=>{
-			if (!imgs || imgs.length ===0) {
-				youWon()
-				throw '';
-			}
-
-			images = imgs;
-			clock.start();
-		}).catch((err)=>{
-			if (err==="") return;
-			console.log("IMAGE ERROR:",err.message)
-		});
-
-	}
-
-	async function requestWordCount() {
-		api.requestWordCount()
-			.then((count)=>{
-				console.log("count", count);
-				for (let index = 0; index < count; index++) {
-					prompt.push("");
-				}
-				console.log("prompt0,",prompt);
-			}).catch((err)=>{
-				console.log("count ERROR:",err.message);
-			});
-	}
-
-	const youWon = ()=> {
-	    counter = 0 ;
-		clock.stop();
-		yell("HOLY MOLY JULIE! THEY WON! THEY WON THE GAMEE!!");
-	}
-	
-	if (typeof window !== "undefined"){
-		loadImages(srcs).then((imgs) => {
-			images = imgs;
-			console.log("INITIAL IMAGES");
-			clock.start();
-		})
-	}
-	
-	let messageToUser = '';
-
-	const yell = (message:string) => messageToUser = message;
-
-	const everyStep = ()=> {
-		// yell(`show image ${counter}`);
-		if (counter >= images.length) return;
+	// We will keep a Clock to tick between images
+	function onClockTick(){
+		if (counter >= images.length) {
+			// Loop the counter background
+			counter = 0;
+		};
 
 		imageElem.src= images[counter].src;
 		counter +=1;
 	}
 
-	const onEnd = () => {
-		console.log("OMG ITS OVER!");
+	// When the clock reaches its end, we start it up again
+	const onClockTimeout = () => {
 		counter = 0;
 		clock.start();
 	}
@@ -91,40 +44,88 @@
 	const clock = Clock(
 		numImagesInSet,
 		delayBetweenImages, 
-		everyStep,
-		onEnd,
+		onClockTick,
+		onClockTimeout,
 	)
 
-	let textboxValue = '';
 
+	async function requestWordCount() {
+		api.requestWordCount()
+			.then((count)=>{
+				for (let index = 0; index < count; index++) {
+					prompt.push("");
+				}
+			}).catch((err)=>{
+				//  TODO: deal with this error properly
+				console.log("count ERROR:",err.message);
+			});
+	}
+
+	// requestImagesFromServer submits our current correct answers to the server and gets the next set of images
+	async function requestImagesFromServer(guesses: number[]) {
+		const imgs = await api.requestImages(guesses).catch((err)=>{
+			console.log("IMAGE ERROR:",err.message ?err.message:err);
+			return null
+		});
+
+		if (imgs === null ) return;
+		
+		// TODO: This is bad. We are interpreting an empty response as a game win point.
+		if ( imgs.length ===0) {
+			youWon()
+			throw '';
+		}
+
+		images = imgs;
+		clock.start();
+	}
+
+	const youWon = ()=> {
+	    counter = 0 ;
+		clock.stop();
+		yell("HOLY MOLY JULIE! THEY WON! THEY WON THE GAMEE!!");
+	}
+
+	const isIncorrectGuess = (index:number) => index === -1;
 
 	async function submitForm(){
-		return api.submitGuess(textboxValue)
-			.then((res) => {
-				const isIncorrectGuess = res.guess_index === -1;
+		const res = await api.submitGuess(textboxValue).catch(err=>{
+			// TODO: properly handle this error
+			console.log("SUBMIT GUESS ERROR",err);
+			return null;
+		});
+		if (res ===null) return;
 
-				console.log("isIncorrectGuess",isIncorrectGuess)
-				if (isIncorrectGuess) return;
-				// TODO: break to separate function
+		if (isIncorrectGuess(res.guess_index)) return;
 
-				correctGuesses.push(res.guess);
-				correctGuesses = correctGuesses;
+		handleCorrectGuess(res.guess_index, res.guess);
+	}
 
-				prompt[res.guess_index] = res.guess;
+	// handleCorrectGuess stores the correct guess data so we can display it to the user
+	function handleCorrectGuess(index:number,guess:string){
+		correctGuesses.push(guess);
+		correctGuesses = correctGuesses;
 
-				correctGuessIndexes.push(res.guess_index);
-				correctGuessIndexes = correctGuessIndexes;
+		prompt[index] = guess;
 
-				requestImagesFromServer(correctGuessIndexes);
-				textboxValue='';
-		})
-		.catch((err) => console.log("SUBMIT ERROR",err));
+		correctGuessIndexes.push(index);
+		correctGuessIndexes = correctGuessIndexes;
+
+		requestImagesFromServer(correctGuessIndexes);
+
+		// Clear the textbox to facilitate next guess
+		textboxValue='';
 	}
 
 
+	// Allows us to focus on the textbox soon after the page has opened
 	const autoFocus = (node:HTMLInputElement) => {
 		setTimeout(()=>node.focus(),200);
 	}
+
+	// Show messages to the user in the page layout
+	let messageToUser = '';
+	const yell = (message:string) => messageToUser = message;
 
 </script>
 
