@@ -25,6 +25,15 @@ export async function GET(url: string) {
 	});
 }
 
+export async function getToJSON(url: string) {
+	return fetch(url, { method: 'GET' }).then((res) => {
+		if (!res.ok) {
+			throw responseError(res);
+		}
+		return res.json();
+	});
+}
+
 export const responseError = (res: Response) => new Error(httpError(res.status) || res.statusText);
 
 const params = (body = {}): RequestInit => ({

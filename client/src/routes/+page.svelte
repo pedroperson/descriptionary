@@ -3,7 +3,7 @@
 
 	import {Clock} from '$lib/static/control/clock';
 	import {loadImages} from '$lib/static/control/imageLoader';
-	import { postToJSON } from '$lib/static/fetcher';
+	import { postToJSON, getToJSON } from '$lib/static/fetcher';
 
 
 	const numImagesInSet = 24;
@@ -15,7 +15,8 @@
 	let imageElem : HTMLImageElement;
 	let images : HTMLImageElement[];
 
-	let prompt : number[] = [];
+	let prompt : string[] = [];
+	requestWordCount();
 
 	let correctGuessIndexes : number[] = [];
 	let correctGuesses : string[] = [];
@@ -29,7 +30,7 @@
 			'http://localhost:8080/images', 
 			{ correct_guesses: correctGuessIndexes }
 		).then((srcs)=>{
-			console.log("I GOT THESE SRCS",srcs);
+			// console.log("I GOT THESE SRCS",srcs);
 			if (!srcs || srcs.length ===0) {
 				youWon()
 				throw '';
@@ -45,6 +46,26 @@
 
 			
 		});
+
+	}
+
+	async function requestWordCount() {
+		getToJSON(
+			'http://localhost:8080/word_count'
+		).then((res)=>{
+			console.log(res)
+			for (let index = 0; index < res.count; index++) {
+				prompt.push("")			
+			}
+	console.log("prompt0,",prompt);
+		}).catch((err)=>{
+			console.log("count ERROR:",err.message)
+
+		});
+
+	
+			
+
 
 	}
 
@@ -103,7 +124,7 @@
 			correctGuesses.push(res.guess);
 			correctGuesses = correctGuesses;
 
-			// prompt[index] = guess;
+			prompt[index] = res.guess;
 
 			correctGuessIndexes.push(index);
 			correctGuessIndexes = correctGuessIndexes;
@@ -137,9 +158,13 @@
 	<div>
 		CORRECT GUESSES :
 
-		{#each correctGuesses as guess}
+		{#each prompt as guess}
 			<span>
+				{#if !guess || guess === ''}
+				 _______ 
+				{:else}
 				{guess}
+				{/if}
 			</span>
 		{/each}
 	</div>
