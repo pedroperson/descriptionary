@@ -4,6 +4,8 @@
 	import {Clock} from '$lib/static/control/clock';
 	import {loadImages} from '$lib/static/control/imageLoader';
 	import { postToJSON, getToJSON } from '$lib/static/fetcher';
+	import { submitGuess, type GuessResponse } from '$lib/static/api/api';
+	
 
 
 	const numImagesInSet = 24;
@@ -112,7 +114,29 @@
 	let textboxValue = '';
 
 
-	async function submitGuess(){
+	async function submitForm(){
+		return submitGuess(textboxValue)
+			.then((res) => {
+				const isIncorrectGuess = res.guess_index === -1;
+
+				console.log("isIncorrectGuess",isIncorrectGuess)
+				if (isIncorrectGuess) return;
+				// TODO: break to separate function
+
+				correctGuesses.push(res.guess);
+				correctGuesses = correctGuesses;
+
+				prompt[res.guess_index] = res.guess;
+
+				correctGuessIndexes.push(res.guess_index);
+				correctGuessIndexes = correctGuessIndexes;
+
+				requestImagesFromServer(correctGuessIndexes);
+				textboxValue='';
+		})
+		.catch((err) => console.log("ERROR",err));
+
+
 		return  postToJSON('http://localhost:8080/guess', { guess: textboxValue })
 		.then((res: any) => {
 			console.log("GUES RESULT: ",res);
