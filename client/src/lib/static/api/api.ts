@@ -1,15 +1,10 @@
 import { loadImages } from '$lib/static/control/imageLoader';
 import { postToJSON, getToJSON } from '$lib/static/fetcher';
 
-export async function submitGuess(guess: string): Promise<{
+// submitGuess send the given guess to the server, and the server responds back with the guess and its position in the correct words array. If the guess is not correct, we receive a position of -1.
+export const submitGuess = (
+	guess: string
+): Promise<{
 	guess_index: number;
 	guess: string;
-}> {
-	const res = await postToJSON('http://localhost:8080/guess', { guess });
-
-	const { guess_index, guess: submittedGuess } = res;
-
-	console.log('guess_index,', guess_index, typeof guess_index);
-	console.log('submittedGuess,', submittedGuess, typeof submittedGuess);
-	return res;
-}
+}> => postToJSON('http://localhost:8080/guess', { guess });
