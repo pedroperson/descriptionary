@@ -147,40 +147,102 @@
 </svelte:head>
 
 <section>
-	<h2>Create the image</h2>
 
-	<img bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
+	<container class="submitcontainer">
+		<input class="textbox" type="text" bind:value={textboxValue} use:autoFocus>
+		<button class="submitbtn" type="submit" on:click={submitGuess}> SUBMIT!!</button>
+	</container>
+
+	<container class="responsecontainer">
+	<img class = "imagedisplay" bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
 	<div>{messageToUser}</div>
 
 
 	<form on:submit|preventDefault={submitGuess}>
 
-	<div>
+	<div class="correctguesses">
 		CORRECT GUESSES :
 
 		{#each prompt as guess}
 			<span>
 				{#if !guess || guess === ''}
-				 _______ 
+				_______ 
 				{:else}
 				{guess}
 				{/if}
 			</span>
 		{/each}
 	</div>
-		<input type="text" bind:value={textboxValue} use:autoFocus>
 
-
-		<button type="submit" on:click={submitGuess}> SUBMIT!!</button>
 	</form>
 </section>
 
 <style>
+	
 	section {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
 		flex: 0.6;
+		gap: 10px;
+	}
+
+	.submitcontainer {
+		display: flex;
+		gap: 10px;
+	}
+
+	.responsecontainer {
+		display: flex;
+		gap: 10px;
+	}
+
+	.textbox {
+		width: 800px;
+		height: 78px;
+
+		background: #D9D9D9;
+		border: 3px solid #140F0F;
+		border-radius: 7px;
+	}
+
+	.submitbtn {
+		width: 201px;
+		height: 78px;
+		border-radius: 19px;
+		background: #468B00;
+
+		font-family: 'Helvetica';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 32px;
+		line-height: 37px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+
+		color: #000000;
+	}
+
+	.imagedisplay {
+		width: 419px;
+		height: 419px;
+		left: 207px;
+		top: 282px;
+	}
+
+	.correctguesses {
+		width: 253px;
+		height: 427px;
+		left: 677px;
+		top: 271px;
+
+		font-family: 'Helvetica';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 24px;
+		line-height: 28px;
+		display: flex;
+		align-items: center;
 	}
 </style>
