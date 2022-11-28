@@ -147,34 +147,37 @@
 </svelte:head>
 
 <section>
-
-	<div class="submitdiv">
-		<input class="textbox" type="text" bind:value={textboxValue} use:autoFocus>
-		<button class="submitbtn" type="submit" on:click={submitGuess}> SUBMIT!!</button>
-	</div>
-
-	<container class="responsecontainer">
-	<img class = "imagedisplay" bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
-	<div>{messageToUser}</div>
-
-
 	<form on:submit|preventDefault={submitGuess}>
+		<div class="submitdiv">
+			<input class="textbox" type="text" bind:value={textboxValue} use:autoFocus>
+			<button class="submitbtn" type="submit" on:click={submitGuess}> SUBMIT!!</button>
+		</div>
+</form>
 
-	<div class="correctguesses">
-		CORRECT GUESSES :
+	<div class="responsediv">
 
-		{#each prompt as guess}
-			<span>
-				{#if !guess || guess === ''}
-				_______ 
-				{:else}
-				{guess}
-				{/if}
-			</span>
-		{/each}
+		<img class = "imagedisplay" bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
+		<div>{messageToUser}</div>
+
+
+		<form on:submit|preventDefault={submitGuess}>
+
+		<div class="correctguesses">
+		 <div>	CORRECT GUESSES :</div>
+	
+			<ul class="prompts">
+				{#each prompt as guess}
+					<li>
+						{#if !guess || guess === ''}
+						_______ 
+						{:else}
+						{guess}
+						{/if}
+					</li>
+				{/each}
+				</ul>
+		</div>
 	</div>
-
-	</form>
 </section>
 
 <style>
@@ -187,12 +190,19 @@
 		gap: 20px;
 	}
 
-	.submitdiv {
+	.prompts {
+		list-style: none; margin:0;padding:0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+	}
+	
+	.responsediv {
 		display: flex;
 		gap: 10px;
 	}
 
-	.responsecontainer {
+	.submitdiv {
 		display: flex;
 		gap: 10px;
 	}
@@ -231,7 +241,6 @@
 	}
 
 	.correctguesses {
-		width: 50%;
 		height: 427px;
 		left: 677px;
 		top: 271px;
@@ -243,5 +252,6 @@
 		line-height: 28px;
 		display: flex;
 		align-items: center;
+		flex-direction: column
 	}
 </style>

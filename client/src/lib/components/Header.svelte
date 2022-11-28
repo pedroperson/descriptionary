@@ -16,7 +16,6 @@
 		font-style: normal;
 		font-weight: 400;
 		font-size: 20px;
-		line-height: 14px;
 
 		display: flex;
 		justify-content: space-between;
