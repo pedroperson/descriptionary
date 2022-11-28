@@ -136,10 +136,10 @@
 </svelte:head>
 
 <section>
-	<form on:submit|preventDefault={submitGuess}>
+	<form on:submit|preventDefault={submitForm}>
 		<div class="submitdiv">
 			<input class="textbox" type="text" bind:value={textboxValue} use:autoFocus>
-			<button class="submitbtn" type="submit" on:click={submitGuess}> SUBMIT!!</button>
+			<button class="submitbtn" type="submit" on:click={submitForm}> SUBMIT!!</button>
 		</div>
 </form>
 
@@ -148,8 +148,6 @@
 		<img class = "imagedisplay" bind:this={imageElem} alt="created by ai, sorry I can't give you more hints without giving you the answer"/>
 		<div>{messageToUser}</div>
 
-
-		<form on:submit|preventDefault={submitGuess}>
 
 		<div class="correctguesses">
 		 <div>	CORRECT GUESSES :</div>
